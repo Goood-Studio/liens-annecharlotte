@@ -1,0 +1,45 @@
+name: Publier liens.annecharlotte.be
+
+# À chaque poussée, chaque nuit (les liens créés depuis /stats/ reçoivent
+# leur page, et l'appel quotidien garde le Supabase gratuit éveillé), ou à la main.
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '15 4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  construire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Construire les pages des liens
+        env:
+          CLE_TABLEAU: ${{ secrets.CLE_TABLEAU }}
+        run: node site/build.mjs
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deployer:
+    needs: construire
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploiement.outputs.page_url }}
+    steps:
+      - id: deploiement
+        uses: actions/deploy-pages@v4

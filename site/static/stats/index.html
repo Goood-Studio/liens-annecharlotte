@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="light">
+<title>Mes liens</title>
+<style>
+@font-face { font-family: 'Young Serif'; font-style: normal; font-weight: 400; font-display: swap; src: url('https://www.annecharlotte.be/fonts/youngserif-latin.woff2') format('woff2'); }
+@font-face { font-family: 'Figtree'; font-style: normal; font-weight: 400 700; font-display: swap; src: url('https://www.annecharlotte.be/fonts/figtree-latin.woff2') format('woff2'); }
+:root {
+  --ecru: #FAF5EE; --blanc: #FFFFFF; --sapin: #16352C; --encre: #22312C; --doux: #5D6B60;
+  --ligne: #E3D8C7; --rose: #F0C3CB; --dore: #B98D45; --erreur: #A23B4F;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--ecru); color: var(--encre); font: 16px/1.5 Figtree, system-ui, sans-serif; }
+main, .entete { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+.entete { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding-top: 28px; padding-bottom: 18px; }
+.sur { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--dore); }
+h1 { font-family: 'Young Serif', Georgia, serif; font-weight: 400; font-size: 36px; line-height: 1.05; margin: 4px 0 0; color: var(--sapin); }
+h2 { font-family: 'Young Serif', Georgia, serif; font-weight: 400; font-size: 21px; line-height: 1.2; margin: 0; color: var(--sapin); overflow-wrap: anywhere; }
+h3 { font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--doux); margin: 26px 0 10px; }
+button, input { font: inherit; }
+.bouton { appearance: none; border: 0; border-radius: 12px; background: var(--sapin); color: var(--blanc); font-weight: 700; padding: 11px 16px; cursor: pointer; min-height: 44px; }
+.bouton.leger { background: transparent; color: var(--sapin); box-shadow: inset 0 0 0 1.5px var(--sapin); }
+.bouton:focus-visible, .copier:focus-visible, summary:focus-visible, input:focus-visible { outline: 3px solid var(--rose); outline-offset: 2px; }
+.etat { color: var(--doux); margin: 0 0 14px; font-size: 14px; }
+.etat.erreur { color: var(--erreur); font-weight: 600; }
+.carte { background: var(--blanc); border-radius: 20px; padding: 20px; margin: 0 0 16px; box-shadow: 0 1px 0 var(--ligne), 0 8px 24px rgba(22, 53, 44, .06); }
+.court { margin: 6px 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-weight: 600; color: var(--sapin); overflow-wrap: anywhere; }
+.copier { appearance: none; border: 0; border-radius: 999px; background: var(--rose); color: var(--encre); font-size: 13px; font-weight: 700; padding: 5px 12px; cursor: pointer; min-height: 32px; }
+.vers { margin: 4px 0 0; font-size: 13px; color: var(--doux); overflow-wrap: anywhere; }
+.chiffres { display: flex; flex-wrap: wrap; gap: 10px 28px; margin: 18px 0 0; }
+.chiffre b { display: block; font-family: 'Young Serif', Georgia, serif; font-weight: 400; font-size: 44px; line-height: 1; color: var(--sapin); font-variant-numeric: tabular-nums; }
+.chiffre span { font-size: 13px; color: var(--doux); }
+.dernier { margin: 12px 0 0; font-size: 13px; color: var(--doux); }
+.vide { margin: 16px 0 0; color: var(--doux); font-size: 14px; }
+details { margin-top: 14px; border-top: 1px solid var(--ligne); padding-top: 4px; }
+summary { cursor: pointer; font-weight: 700; color: var(--sapin); padding: 10px 0; min-height: 44px; display: flex; align-items: center; }
+/* Clics par jour : barres fines, 2 px d'écart, bout arrondi. */
+.jours { position: relative; padding-top: 22px; }
+.jours-graph { position: relative; height: 150px; display: flex; align-items: flex-end; gap: 2px; border-bottom: 1px solid var(--ligne); }
+.jours-max { position: absolute; left: 0; right: 0; top: 0; border-top: 1px dashed var(--ligne); }
+.jours-max span { position: absolute; top: -21px; left: 0; font-size: 12px; color: var(--doux); font-variant-numeric: tabular-nums; }
+.col { flex: 1 1 0; height: 100%; display: flex; align-items: flex-end; cursor: default; min-width: 0; padding: 0; border: 0; background: transparent; }
+.col i { display: block; width: 100%; background: var(--sapin); border-radius: 4px 4px 0 0; }
+.col.zero i { height: 0; }
+.col:hover i, .col.actif i { background: #2E5A4C; }
+.jours-axe { display: flex; justify-content: space-between; font-size: 12px; color: var(--doux); margin-top: 6px; }
+.bulle { position: absolute; top: -6px; transform: translate(-50%, -100%); background: var(--encre); color: var(--blanc); font-size: 13px; padding: 6px 10px; border-radius: 8px; white-space: nowrap; pointer-events: none; z-index: 2; }
+.bulle[hidden] { display: none; }
+/* Répartitions : une ligne par valeur, triées. */
+.barres { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.barres li { display: grid; grid-template-columns: minmax(96px, 36%) 1fr auto; align-items: center; gap: 10px; font-size: 14px; }
+.barres .nom { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.barres .piste { height: 14px; }
+.barres .piste i { display: block; height: 100%; background: var(--sapin); border-radius: 0 4px 4px 0; min-width: 2px; }
+.barres .n { font-variant-numeric: tabular-nums; font-weight: 700; text-align: right; min-width: 64px; }
+.barres .n small { font-weight: 400; color: var(--doux); }
+.tableau-jours { margin-top: 10px; font-size: 13px; }
+.tableau-jours summary { font-weight: 600; font-size: 13px; color: var(--doux); min-height: 36px; padding: 6px 0; }
+.tableau-jours table { border-collapse: collapse; width: 100%; max-width: 320px; }
+.tableau-jours td { padding: 3px 0; border-bottom: 1px solid var(--ligne); font-variant-numeric: tabular-nums; }
+.tableau-jours td + td { text-align: right; }
+/* Nouveau lien */
+form { display: grid; gap: 14px; margin-top: 14px; }
+label { display: grid; gap: 6px; font-size: 14px; font-weight: 700; color: var(--encre); }
+label small { font-weight: 400; color: var(--doux); }
+input::placeholder { color: #A2A89F; font-weight: 400; }
+input { width: 100%; border: 1.5px solid var(--ligne); border-radius: 12px; padding: 11px 12px; background: var(--ecru); color: var(--encre); min-height: 46px; }
+.prefixe { display: flex; align-items: center; border: 1.5px solid var(--ligne); border-radius: 12px; background: var(--ecru); overflow: hidden; }
+.prefixe span { padding: 0 2px 0 12px; color: var(--doux); font-weight: 400; white-space: nowrap; font-size: 14px; }
+.prefixe input { border: 0; background: transparent; padding-left: 0; min-width: 0; }
+.retour { margin: 0; font-size: 14px; }
+.retour.erreur { color: var(--erreur); font-weight: 600; }
+.retour.ok { background: var(--ecru); border-radius: 12px; padding: 12px 14px; }
+.note { font-size: 13px; color: var(--doux); margin: 8px 0 40px; }
+.cle-form { display: flex; gap: 8px; margin-top: 12px; }
+@media (max-width: 420px) {
+  h1 { font-size: 30px; }
+  .chiffre b { font-size: 38px; }
+  .barres li { grid-template-columns: minmax(84px, 40%) 1fr auto; }
+  .prefixe span { font-size: 13px; }
+}
+</style>
+</head>
+<body>
+<header class="entete">
+  <div>
+    <p class="sur">liens.annecharlotte.be</p>
+    <h1>Mes liens</h1>
+  </div>
+  <button class="bouton leger" id="actualiser" type="button">Actualiser</button>
+</header>
+<main>
+  <section class="carte" id="cle-zone" hidden>
+    <h2>Ta clé</h2>
+    <p class="vide">Ouvre le lien complet de ton favori (celui qui finit par #cle=…), ou colle ta clé ici.</p>
+    <form class="cle-form" id="cle-form">
+      <input name="cle" autocomplete="off" aria-label="Clé du tableau" required>
+      <button class="bouton" type="submit">Ouvrir</button>
+    </form>
+  </section>
+
+  <p class="etat" id="etat" role="status">Chargement…</p>
+  <div id="liste"></div>
+
+  <section class="carte" id="nouveau" hidden>
+    <h2>Nouveau lien</h2>
+    <form id="form-nouveau" novalidate>
+      <label>C'est pour quoi ?
+        <input name="nom" placeholder="Bio Instagram, bingo" maxlength="120" required>
+      </label>
+      <label>Il mène où ? <small>L'adresse de la page, copiée depuis ton navigateur.</small>
+        <input name="destination" placeholder="https://www.annecharlotte.be/bingo/" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false" required>
+      </label>
+      <label>Ton lien court
+        <span class="prefixe"><span>liens.annecharlotte.be/</span><input name="slug" placeholder="bingo-insta" maxlength="41" autocapitalize="off" autocorrect="off" spellcheck="false" required></span>
+      </label>
+      <button class="bouton" type="submit">Créer le lien</button>
+      <p class="retour" id="nouveau-retour" role="status"></p>
+    </form>
+  </section>
+
+  <p class="note">Rien de personnel n'est gardé : ni adresse IP, ni cookie. Le pays vient de l'heure réglée sur le téléphone. « Direct ou appli » : le lien a été tapé, copié, ou ouvert depuis une appli qui ne dit pas d'où elle vient (c'est souvent le cas de l'appli YouTube). Les chiffres se mettent à jour tout seuls toutes les 30 secondes.</p>
+</main>
+
+<script>
+(function () {
+  var F = 'https://bgenoxwpwhqvsqdupnub.supabase.co/functions/v1/tableau';
+  var DOMAINE = 'liens.annecharlotte.be/';
+  // Les pages du site qui comptent le téléchargement de leur PDF.
+  var PAGES_PDF = ['/bingo/'];
+  var JOURS_MAX = 60, JOURS_MIN = 14; // au moins deux semaines : des barres fines dès le 1er jour
+
+  var $ = function (id) { return document.getElementById(id); };
+  var etat = $('etat'), liste = $('liste');
+  var ouverts = {};          // détails ouverts, gardés d'un rafraîchissement à l'autre
+  var premierChargement = true;
+
+  // La clé : dans le lien du favori (#cle=…), sinon celle déjà retenue ici.
+  var cle = new URLSearchParams(location.hash.slice(1)).get('cle') || '';
+  try {
+    if (cle) localStorage.setItem('liens-cle', cle);
+    else cle = localStorage.getItem('liens-cle') || '';
+  } catch (e) {}
+
+  function api(action, extra) {
+    var corps = Object.assign({ cle: cle, action: action }, extra || {});
+    return fetch(F, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(corps) })
+      .then(function (r) { return r.json().then(function (d) { d._statut = r.status; return d; }); });
+  }
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  var nombre = new Intl.NumberFormat('fr-BE');
+  var jourBxl = new Intl.DateTimeFormat('fr-CA', { timeZone: 'Europe/Brussels' }); // AAAA-MM-JJ
+  var jourCourt = new Intl.DateTimeFormat('fr-BE', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+  var jourLong = new Intl.DateTimeFormat('fr-BE', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' });
+  var heure = new Intl.DateTimeFormat('fr-BE', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Brussels' });
+
+  function ilYa(iso) {
+    if (!iso) return '';
+    var d = new Date(iso), min = Math.round((Date.now() - d) / 60000);
+    if (min < 1) return 'à l’instant';
+    if (min < 60) return 'il y a ' + min + ' min';
+    if (min < 24 * 60 && jourBxl.format(d) === jourBxl.format(new Date())) return 'aujourd’hui à ' + heure.format(d);
+    return 'le ' + jourCourt.format(new Date(jourBxl.format(d) + 'T00:00:00Z')) + ' à ' + heure.format(d);
+  }
+
+  // Tous les jours entre la création du lien (au plus 60 jours) et aujourd'hui.
+  function serieJours(lien) {
+    var aujourdhui = jourBxl.format(new Date());
+    var debut = jourBxl.format(new Date(lien.cree_le));
+    var t = Date.parse(aujourdhui + 'T00:00:00Z'), t0 = Date.parse(debut + 'T00:00:00Z');
+    t0 = Math.min(Math.max(t0, t - (JOURS_MAX - 1) * 864e5), t - (JOURS_MIN - 1) * 864e5);
+    var jours = [];
+    for (var x = t0; x <= t; x += 864e5) {
+      var jour = new Date(x).toISOString().slice(0, 10);
+      jours.push({ jour: jour, n: (lien.par_jour || {})[jour] || 0 });
+    }
+    return jours;
+  }
+
+  function grapheJours(lien) {
+    var jours = serieJours(lien);
+    var max = Math.max.apply(null, jours.map(function (j) { return j.n; })) || 1;
+    var cols = jours.map(function (j) {
+      var h = j.n ? Math.max(2, Math.round((j.n / max) * 100)) : 0;
+      var texte = jourLong.format(new Date(j.jour + 'T00:00:00Z')) + ' · ' + nombre.format(j.n) + (j.n > 1 ? ' clics' : ' clic');
+      return '<button type="button" class="col' + (j.n ? '' : ' zero') + '" data-bulle="' + esc(texte) + '" aria-label="' + esc(texte) + '"><i style="height:' + h + '%"></i></button>';
+    }).join('');
+    var premier = jours[0].jour, dernier = jours[jours.length - 1].jour;
+    var lignes = jours.slice().reverse().filter(function (j) { return j.n; }).map(function (j) {
+      return '<tr><td>' + esc(jourLong.format(new Date(j.jour + 'T00:00:00Z'))) + '</td><td>' + nombre.format(j.n) + '</td></tr>';
+    }).join('');
+    return '<div class="jours">' +
+      '<div class="jours-graph"><div class="jours-max"><span>' + nombre.format(max) + '</span></div>' + cols + '</div>' +
+      '<div class="jours-axe"><span>' + esc(jourCourt.format(new Date(premier + 'T00:00:00Z'))) + '</span>' +
+      (jours.length > 1 ? '<span>aujourd’hui</span>' : '') + '</div>' +
+      '<p class="bulle" hidden></p></div>' +
+      '<details class="tableau-jours"><summary>Les chiffres jour par jour</summary><table>' + lignes + '</table></details>';
+  }
+
+  function barres(objet, total) {
+    var lignes = Object.keys(objet || {}).map(function (k) { return [k, objet[k]]; })
+      .sort(function (a, b) { return b[1] - a[1]; });
+    if (!lignes.length) return '<p class="vide">Rien pour l’instant.</p>';
+    var max = lignes[0][1];
+    return '<ul class="barres">' + lignes.map(function (l) {
+      var pct = Math.round((l[1] / total) * 100);
+      return '<li title="' + esc(l[0]) + ' : ' + l[1] + '"><span class="nom">' + esc(l[0]) + '</span>' +
+        '<span class="piste"><i style="width:' + ((l[1] / max) * 100).toFixed(1) + '%"></i></span>' +
+        '<span class="n">' + nombre.format(l[1]) + ' <small>' + pct + ' %</small></span></li>';
+    }).join('') + '</ul>';
+  }
+
+  function aPdf(destination) {
+    try {
+      var u = new URL(destination);
+      return /(^|\.)annecharlotte\.be$/.test(u.hostname) && PAGES_PDF.indexOf(u.pathname) !== -1;
+    } catch (e) { return false; }
+  }
+
+  function carte(lien, seul) {
+    var aujourdhui = (lien.par_jour || {})[jourBxl.format(new Date())] || 0;
+    var court = DOMAINE + lien.slug;
+    var html = '<article class="carte" data-slug="' + esc(lien.slug) + '">' +
+      '<h2>' + esc(lien.nom) + '</h2>' +
+      '<p class="court">' + esc(court) + ' <button type="button" class="copier" data-copier="https://' + esc(court) + '">Copier</button></p>' +
+      '<p class="vers">→ ' + esc(lien.destination.replace(/^https:\/\//, '')) + '</p>' +
+      '<div class="chiffres">' +
+        '<div class="chiffre"><b>' + nombre.format(lien.clics) + '</b><span>' + (lien.clics > 1 ? 'clics' : 'clic') + ' en tout</span></div>' +
+        '<div class="chiffre"><b>' + nombre.format(aujourdhui) + '</b><span>aujourd’hui</span></div>' +
+        (aPdf(lien.destination) || lien.telechargements ? '<div class="chiffre"><b>' + nombre.format(lien.telechargements) + '</b><span>PDF téléchargé' + (lien.telechargements > 1 ? 's' : '') + '</span></div>' : '') +
+      '</div>';
+    if (!lien.clics) {
+      return html + '<p class="vide">Pas encore de clic. Dès que quelqu’un clique, ça s’affiche ici.</p></article>';
+    }
+    var ouvert = ouverts[lien.slug] !== undefined ? ouverts[lien.slug] : seul;
+    return html + '<p class="dernier">Dernier clic ' + esc(ilYa(lien.dernier_clic)) + '</p>' +
+      '<details' + (ouvert ? ' open' : '') + '><summary>Le détail</summary>' +
+      '<h3>Clics par jour</h3>' + grapheJours(lien) +
+      '<h3>D’où</h3>' + barres(lien.sources, lien.clics) +
+      '<h3>Téléphone ou ordi</h3>' + barres(lien.appareils, lien.clics) +
+      '<h3>Pays</h3>' + barres(lien.pays, lien.clics) +
+      '</details></article>';
+  }
+
+  function charger() {
+    if (!cle) { $('cle-zone').hidden = false; etat.textContent = ''; return; }
+    return api('stats').then(function (d) {
+      if (d._statut === 401) {
+        $('cle-zone').hidden = false; $('nouveau').hidden = true; liste.innerHTML = '';
+        etat.className = 'etat erreur'; etat.textContent = 'Cette clé ne marche pas.';
+        return;
+      }
+      if (!d.liens) throw new Error(d.erreur || 'réponse vide');
+      $('cle-zone').hidden = true; $('nouveau').hidden = false;
+      liste.querySelectorAll('details:not(.tableau-jours)').forEach(function (el) {
+        ouverts[el.closest('[data-slug]').dataset.slug] = el.open;
+      });
+      liste.innerHTML = d.liens.length
+        ? d.liens.map(function (l) { return carte(l, d.liens.length === 1 || premierChargement && l === d.liens[0]); }).join('')
+        : '<p class="vide">Aucun lien pour l’instant : crée le premier juste en dessous.</p>';
+      premierChargement = false;
+      etat.className = 'etat';
+      etat.textContent = 'À jour à ' + heure.format(new Date());
+    }).catch(function () {
+      etat.className = 'etat erreur';
+      etat.textContent = 'Impossible de charger les chiffres. Vérifie ta connexion, puis « Actualiser ».';
+    });
+  }
+
+  // Bulle des barres par jour (survol à la souris, toucher au téléphone).
+  function montrerBulle(col) {
+    var bloc = col.closest('.jours'), bulle = bloc.querySelector('.bulle');
+    bloc.querySelectorAll('.col.actif').forEach(function (c) { c.classList.remove('actif'); });
+    col.classList.add('actif');
+    bulle.textContent = col.dataset.bulle;
+    bulle.hidden = false;
+    var x = col.offsetLeft + col.offsetWidth / 2;
+    var demi = bulle.offsetWidth / 2;
+    bulle.style.left = Math.min(Math.max(x, demi), bloc.offsetWidth - demi) + 'px';
+  }
+  function cacherBulle(bloc) {
+    bloc.querySelector('.bulle').hidden = true;
+    bloc.querySelectorAll('.col.actif').forEach(function (c) { c.classList.remove('actif'); });
+  }
+  liste.addEventListener('mouseover', function (e) { var c = e.target.closest('.col'); if (c) montrerBulle(c); });
+  liste.addEventListener('mouseout', function (e) {
+    var c = e.target.closest('.col');
+    if (c && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest('.jours-graph'))) cacherBulle(c.closest('.jours'));
+  });
+  liste.addEventListener('focusin', function (e) { var c = e.target.closest('.col'); if (c) montrerBulle(c); });
+  liste.addEventListener('click', function (e) {
+    var c = e.target.closest('.col');
+    if (c) { montrerBulle(c); return; }
+    var b = e.target.closest('[data-copier]');
+    if (b) copier(b.dataset.copier, b);
+  });
+
+  function copier(texte, bouton) {
+    var fini = function () { var t = bouton.textContent; bouton.textContent = 'Copié !'; setTimeout(function () { bouton.textContent = t; }, 1600); };
+    if (navigator.clipboard) navigator.clipboard.writeText(texte).then(fini, function () { prompt('Copie ce lien :', texte); });
+    else prompt('Copie ce lien :', texte);
+  }
+
+  $('actualiser').addEventListener('click', function () { etat.className = 'etat'; etat.textContent = 'Chargement…'; charger(); });
+  $('cle-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    cle = e.target.cle.value.trim();
+    try { localStorage.setItem('liens-cle', cle); } catch (err) {}
+    etat.className = 'etat'; etat.textContent = 'Chargement…';
+    charger();
+  });
+
+  // Nouveau lien : la fin du lien se propose d'après le nom, tant qu'on n'y touche pas.
+  var form = $('form-nouveau'), retour = $('nouveau-retour'), slugTouche = false;
+  function versSlug(s) {
+    return s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40).replace(/-+$/, '');
+  }
+  form.nom.addEventListener('input', function () { if (!slugTouche) form.slug.value = versSlug(form.nom.value); });
+  form.slug.addEventListener('input', function () { slugTouche = true; });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var slug = versSlug(form.slug.value), nom = form.nom.value.trim(), destination = form.destination.value.trim();
+    form.slug.value = slug;
+    retour.className = 'retour';
+    if (!nom || !destination || !slug) { retour.className = 'retour erreur'; retour.textContent = 'Remplis les trois cases.'; return; }
+    var bouton = form.querySelector('button[type=submit]');
+    bouton.disabled = true; retour.textContent = 'Création…';
+    api('creer', { nom: nom, destination: destination, slug: slug }).then(function (d) {
+      bouton.disabled = false;
+      if (!d.ok) { retour.className = 'retour erreur'; retour.textContent = d.erreur || 'Ça n’a pas marché.'; return; }
+      var court = DOMAINE + d.slug;
+      retour.className = 'retour ok';
+      retour.innerHTML = 'C’est prêt, il marche déjà : <b>' + esc(court) + '</b> <button type="button" class="copier" data-copier="https://' + esc(court) + '">Copier</button>';
+      retour.querySelector('.copier').addEventListener('click', function (ev) { copier(ev.target.dataset.copier, ev.target); });
+      form.nom.value = ''; form.destination.value = ''; form.slug.value = ''; slugTouche = false;
+      charger();
+    }).catch(function () { bouton.disabled = false; retour.className = 'retour erreur'; retour.textContent = 'Pas de connexion, réessaie.'; });
+  });
+
+  charger();
+  setInterval(function () { if (document.visibilityState === 'visible' && cle) charger(); }, 30000);
+})();
+</script>
+</body>
+</html>

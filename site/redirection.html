@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>{{TITRE}}</title>
+{{APERCU}}
+<link rel="canonical" href="{{DESTINATION}}">
+<script>
+(function () {
+  var slug = {{SLUG_JSON}}, dest = {{DEST_JSON}};
+  var F = 'https://bgenoxwpwhqvsqdupnub.supabase.co/functions/v1/go';
+  var tz = '';
+  try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {}
+  var url = F + '?' + new URLSearchParams({ l: slug, r: document.referrer || '', tz: tz });
+  // sendBeacon part même quand la page change aussitôt : le clic est compté
+  // sans retarder la personne.
+  var envoye = false;
+  try { envoye = navigator.sendBeacon(url); } catch (e) {}
+  if (!envoye) { try { fetch(url, { method: 'POST', keepalive: true, mode: 'no-cors' }); } catch (e) {} }
+  // Sur annecharlotte.be, ?via= dit à la page quel lien a amené la personne
+  // (pour compter les téléchargements du PDF).
+  try {
+    var u = new URL(dest);
+    if (/(^|\.)annecharlotte\.be$/.test(u.hostname)) { u.searchParams.set('via', slug); dest = u.toString(); }
+  } catch (e) {}
+  location.replace(dest);
+})();
+</script>
+<noscript><meta http-equiv="refresh" content="0;url={{DESTINATION}}"></noscript>
+<style>
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #FAF5EE; color: #22312C; font: 16px/1.5 system-ui, sans-serif; }
+  a { color: #16352C; font-weight: 600; }
+</style>
+</head>
+<body>
+<p>On t'emmène… <a href="{{DESTINATION}}">ou clique ici</a>.</p>
+</body>
+</html>

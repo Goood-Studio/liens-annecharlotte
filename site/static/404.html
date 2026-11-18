@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Anne-Charlotte</title>
+<script>
+// Un lien créé aujourd'hui depuis le tableau n'a pas encore sa page (elle
+// arrive avec la publication de la nuit) : on demande sa destination à la
+// fonction go, qui compte le clic au passage.
+(function () {
+  var F = 'https://bgenoxwpwhqvsqdupnub.supabase.co/functions/v1/go';
+  var slug = location.pathname.replace(/^\/+|\/+$/g, '').split('/')[0].toLowerCase();
+  if (!slug) { location.replace('https://www.annecharlotte.be/'); return; }
+  var tz = '';
+  try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {}
+  var echec = function () { document.documentElement.className = 'introuvable'; };
+  var minuteur = setTimeout(echec, 8000);
+  fetch(F + '?' + new URLSearchParams({ l: slug, r: document.referrer || '', tz: tz }))
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      clearTimeout(minuteur);
+      if (!d || !d.destination) return echec();
+      var dest = d.destination;
+      try {
+        var u = new URL(dest);
+        if (/(^|\.)annecharlotte\.be$/.test(u.hostname)) { u.searchParams.set('via', slug); dest = u.toString(); }
+      } catch (e) {}
+      location.replace(dest);
+    })
+    .catch(function () { clearTimeout(minuteur); echec(); });
+})();
+</script>
+<style>
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #FAF5EE; color: #22312C; font: 16px/1.5 system-ui, sans-serif; padding: 0 16px; text-align: center; }
+  a { color: #16352C; font-weight: 600; }
+  .perdu { display: none; }
+  .introuvable .attente { display: none; }
+  .introuvable .perdu { display: block; }
+</style>
+</head>
+<body>
+<p class="attente">On t'emmène…</p>
+<div class="perdu">
+  <p>Ce lien n'existe pas, ou plus.</p>
+  <p><a href="https://www.annecharlotte.be/">Aller sur annecharlotte.be</a></p>
+</div>
+</body>
+</html>

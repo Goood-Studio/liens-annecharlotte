@@ -307,8 +307,23 @@ input { width: 100%; border: 1.5px solid var(--ligne); border-radius: 12px; padd
 
   function copier(texte, bouton) {
     var fini = function () { var t = bouton.textContent; bouton.textContent = 'Copié !'; setTimeout(function () { bouton.textContent = t; }, 1600); };
-    if (navigator.clipboard) navigator.clipboard.writeText(texte).then(fini, function () { prompt('Copie ce lien :', texte); });
-    else prompt('Copie ce lien :', texte);
+    // Sans HTTPS (ou dans certains navigateurs), navigator.clipboard n'existe
+    // pas : on passe par une zone de texte invisible, sans fenêtre.
+    var secours = function () {
+      var zone = document.createElement('textarea');
+      zone.value = texte;
+      zone.setAttribute('readonly', '');
+      zone.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none;';
+      document.body.appendChild(zone);
+      zone.select();
+      zone.setSelectionRange(0, texte.length);
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(zone);
+      if (ok) fini(); else prompt('Copie ce lien :', texte);
+    };
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(texte).then(fini, secours);
+    else secours();
   }
 
   $('actualiser').addEventListener('click', function () { etat.className = 'etat'; etat.textContent = 'Chargement…'; charger(); });

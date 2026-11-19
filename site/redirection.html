@@ -8,24 +8,15 @@
 {{APERCU}}
 <link rel="canonical" href="{{DESTINATION}}">
 <script>
+{{ALLER_JS}}
 (function () {
-  var slug = {{SLUG_JSON}}, dest = {{DEST_JSON}};
-  var F = 'https://bgenoxwpwhqvsqdupnub.supabase.co/functions/v1/go';
-  var tz = '';
-  try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {}
-  var url = F + '?' + new URLSearchParams({ l: slug, r: document.referrer || '', tz: tz });
+  var slug = {{SLUG_JSON}};
   // sendBeacon part même quand la page change aussitôt : le clic est compté
   // sans retarder la personne.
-  var envoye = false;
+  var url = GO + '?' + parametresGo(slug), envoye = false;
   try { envoye = navigator.sendBeacon(url); } catch (e) {}
   if (!envoye) { try { fetch(url, { method: 'POST', keepalive: true, mode: 'no-cors' }); } catch (e) {} }
-  // Sur annecharlotte.be, ?via= dit à la page quel lien a amené la personne
-  // (pour compter les téléchargements du PDF).
-  try {
-    var u = new URL(dest);
-    if (/(^|\.)annecharlotte\.be$/.test(u.hostname)) { u.searchParams.set('via', slug); dest = u.toString(); }
-  } catch (e) {}
-  location.replace(dest);
+  aller(slug, {{DEST_JSON}});
 })();
 </script>
 <noscript><meta http-equiv="refresh" content="0;url={{DESTINATION}}"></noscript>

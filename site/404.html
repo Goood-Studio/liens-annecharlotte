@@ -9,25 +9,19 @@
 // Un lien créé aujourd'hui depuis le tableau n'a pas encore sa page (elle
 // arrive avec la publication de la nuit) : on demande sa destination à la
 // fonction go, qui compte le clic au passage.
+{{ALLER_JS}}
 (function () {
-  var F = 'https://bgenoxwpwhqvsqdupnub.supabase.co/functions/v1/go';
-  var slug = location.pathname.replace(/^\/+|\/+$/g, '').split('/')[0].toLowerCase();
+  // Les liens ont la forme « nom » ou « page/id ».
+  var slug = location.pathname.replace(/^\/+|\/+$/g, '').split('/').slice(0, 2).join('/').toLowerCase();
   if (!slug) { location.replace('https://www.annecharlotte.be/'); return; }
-  var tz = '';
-  try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {}
   var echec = function () { document.documentElement.className = 'introuvable'; };
   var minuteur = setTimeout(echec, 8000);
-  fetch(F + '?' + new URLSearchParams({ l: slug, r: document.referrer || '', tz: tz }))
+  fetch(GO + '?' + parametresGo(slug))
     .then(function (r) { return r.json(); })
     .then(function (d) {
       clearTimeout(minuteur);
       if (!d || !d.destination) return echec();
-      var dest = d.destination;
-      try {
-        var u = new URL(dest);
-        if (/(^|\.)annecharlotte\.be$/.test(u.hostname)) { u.searchParams.set('via', slug); dest = u.toString(); }
-      } catch (e) {}
-      location.replace(dest);
+      aller(slug, d.destination);
     })
     .catch(function () { clearTimeout(minuteur); echec(); });
 })();

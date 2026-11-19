@@ -16,32 +16,45 @@
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
 body { margin: 0; background: var(--ecru); color: var(--encre); font: 16px/1.5 Figtree, system-ui, sans-serif; }
-main, .entete { max-width: 720px; margin: 0 auto; padding: 0 16px; }
-.entete { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding-top: 28px; padding-bottom: 18px; }
+main, .entete { max-width: 760px; margin: 0 auto; padding: 0 16px; }
+.entete { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding-top: 28px; padding-bottom: 14px; }
 .sur { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--dore); }
 h1 { font-family: 'Young Serif', Georgia, serif; font-weight: 400; font-size: 36px; line-height: 1.05; margin: 4px 0 0; color: var(--sapin); }
-h2 { font-family: 'Young Serif', Georgia, serif; font-weight: 400; font-size: 21px; line-height: 1.2; margin: 0; color: var(--sapin); overflow-wrap: anywhere; }
-h3 { font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--doux); margin: 26px 0 10px; }
-button, input { font: inherit; }
+h2 { font-family: 'Young Serif', Georgia, serif; font-weight: 400; font-size: 22px; line-height: 1.2; margin: 0; color: var(--sapin); overflow-wrap: anywhere; }
+h3 { font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--doux); margin: 24px 0 10px; }
+button, input, select { font: inherit; }
 .bouton { appearance: none; border: 0; border-radius: 12px; background: var(--sapin); color: var(--blanc); font-weight: 700; padding: 11px 16px; cursor: pointer; min-height: 44px; }
 .bouton.leger { background: transparent; color: var(--sapin); box-shadow: inset 0 0 0 1.5px var(--sapin); }
-.bouton:focus-visible, .copier:focus-visible, summary:focus-visible, input:focus-visible { outline: 3px solid var(--rose); outline-offset: 2px; }
-.etat { color: var(--doux); margin: 0 0 14px; font-size: 14px; }
+.bouton:disabled { opacity: .6; cursor: default; }
+.bouton:focus-visible, .petit:focus-visible, summary:focus-visible, input:focus-visible, select:focus-visible, .puce input:focus-visible + span { outline: 3px solid var(--rose); outline-offset: 2px; }
+.barre-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 14px; }
+.etat { color: var(--doux); margin: 0; font-size: 14px; }
 .etat.erreur { color: var(--erreur); font-weight: 600; }
 .carte { background: var(--blanc); border-radius: 20px; padding: 20px; margin: 0 0 16px; box-shadow: 0 1px 0 var(--ligne), 0 8px 24px rgba(22, 53, 44, .06); }
-.court { margin: 6px 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-weight: 600; color: var(--sapin); overflow-wrap: anywhere; }
-.copier { appearance: none; border: 0; border-radius: 999px; background: var(--rose); color: var(--encre); font-size: 13px; font-weight: 700; padding: 5px 12px; cursor: pointer; min-height: 32px; }
-.vers { margin: 4px 0 0; font-size: 13px; color: var(--doux); overflow-wrap: anywhere; }
-.chiffres { display: flex; flex-wrap: wrap; gap: 10px 28px; margin: 18px 0 0; }
-.chiffre b { display: block; font-family: 'Young Serif', Georgia, serif; font-weight: 400; font-size: 44px; line-height: 1; color: var(--sapin); font-variant-numeric: tabular-nums; }
+.sous { margin: 4px 0 0; font-size: 13px; color: var(--doux); overflow-wrap: anywhere; }
+.chiffres { display: flex; flex-wrap: wrap; gap: 10px 26px; margin: 16px 0 0; }
+.chiffre b { display: block; font-family: 'Young Serif', Georgia, serif; font-weight: 400; font-size: 42px; line-height: 1; color: var(--sapin); font-variant-numeric: tabular-nums; }
 .chiffre span { font-size: 13px; color: var(--doux); }
-.dernier { margin: 12px 0 0; font-size: 13px; color: var(--doux); }
-.vide { margin: 16px 0 0; color: var(--doux); font-size: 14px; }
-details { margin-top: 14px; border-top: 1px solid var(--ligne); padding-top: 4px; }
-summary { cursor: pointer; font-weight: 700; color: var(--sapin); padding: 10px 0; min-height: 44px; display: flex; align-items: center; }
+.chiffres.petits { gap: 8px 22px; margin-top: 12px; }
+.chiffres.petits .chiffre b { font-size: 26px; }
+.vide { margin: 12px 0 0; color: var(--doux); font-size: 14px; }
+.pastille { display: inline-block; background: var(--ecru); border: 1px solid var(--ligne); color: var(--encre); border-radius: 999px; font-size: 12px; font-weight: 700; padding: 2px 10px; white-space: nowrap; }
+.petit { appearance: none; border: 0; border-radius: 999px; background: var(--rose); color: var(--encre); font-size: 13px; font-weight: 700; padding: 5px 12px; cursor: pointer; min-height: 32px; }
+.petit.blanc { background: var(--ecru); box-shadow: inset 0 0 0 1px var(--ligne); }
+/* Les liens d'une page */
+.liens { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 0; }
+.lien { border-top: 1px solid var(--ligne); padding: 14px 0; }
+.lien:last-child { padding-bottom: 0; }
+.lien-tete { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+.lien-tete .contenu { font-weight: 700; overflow-wrap: anywhere; }
+.court { margin: 6px 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 14px; font-weight: 600; color: var(--sapin); overflow-wrap: anywhere; }
+.mini { margin: 6px 0 0; font-size: 14px; color: var(--doux); }
+.mini b { color: var(--encre); font-variant-numeric: tabular-nums; }
+details.detail { margin-top: 6px; }
+details.detail > summary { cursor: pointer; font-weight: 700; color: var(--sapin); font-size: 14px; min-height: 40px; display: flex; align-items: center; }
 /* Clics par jour : barres fines, 2 px d'écart, bout arrondi. */
 .jours { position: relative; padding-top: 22px; }
-.jours-graph { position: relative; height: 150px; display: flex; align-items: flex-end; gap: 2px; border-bottom: 1px solid var(--ligne); }
+.jours-graph { position: relative; height: 130px; display: flex; align-items: flex-end; gap: 2px; border-bottom: 1px solid var(--ligne); }
 .jours-max { position: absolute; left: 0; right: 0; top: 0; border-top: 1px dashed var(--ligne); }
 .jours-max span { position: absolute; top: -21px; left: 0; font-size: 12px; color: var(--doux); font-variant-numeric: tabular-nums; }
 .col { flex: 1 1 0; height: 100%; display: flex; align-items: flex-end; cursor: default; min-width: 0; padding: 0; border: 0; background: transparent; }
@@ -49,7 +62,7 @@ summary { cursor: pointer; font-weight: 700; color: var(--sapin); padding: 10px 
 .col.zero i { height: 0; }
 .col:hover i, .col.actif i { background: #2E5A4C; }
 .jours-axe { display: flex; justify-content: space-between; font-size: 12px; color: var(--doux); margin-top: 6px; }
-.bulle { position: absolute; top: -6px; transform: translate(-50%, -100%); background: var(--encre); color: var(--blanc); font-size: 13px; padding: 6px 10px; border-radius: 8px; white-space: nowrap; pointer-events: none; z-index: 2; }
+.bulle { position: absolute; top: -6px; transform: translate(-50%, -100%); background: var(--encre); color: var(--blanc); font-size: 13px; padding: 6px 10px; border-radius: 8px; white-space: nowrap; pointer-events: none; z-index: 2; margin: 0; }
 .bulle[hidden] { display: none; }
 /* Répartitions : une ligne par valeur, triées. */
 .barres { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
@@ -59,30 +72,46 @@ summary { cursor: pointer; font-weight: 700; color: var(--sapin); padding: 10px 
 .barres .piste i { display: block; height: 100%; background: var(--sapin); border-radius: 0 4px 4px 0; min-width: 2px; }
 .barres .n { font-variant-numeric: tabular-nums; font-weight: 700; text-align: right; min-width: 64px; }
 .barres .n small { font-weight: 400; color: var(--doux); }
-.tableau-jours { margin-top: 10px; font-size: 13px; }
-.tableau-jours summary { font-weight: 600; font-size: 13px; color: var(--doux); min-height: 36px; padding: 6px 0; }
-.tableau-jours table { border-collapse: collapse; width: 100%; max-width: 320px; }
-.tableau-jours td { padding: 3px 0; border-bottom: 1px solid var(--ligne); font-variant-numeric: tabular-nums; }
-.tableau-jours td + td { text-align: right; }
-/* Nouveau lien */
-form { display: grid; gap: 14px; margin-top: 14px; }
-label { display: grid; gap: 6px; font-size: 14px; font-weight: 700; color: var(--encre); }
-label small { font-weight: 400; color: var(--doux); }
+/* Classement des contenus */
+.top { list-style: none; margin: 0; padding: 0; counter-reset: rang; display: grid; gap: 8px; }
+.top li { counter-increment: rang; display: grid; grid-template-columns: 22px 1fr auto; gap: 8px; align-items: baseline; font-size: 14px; }
+.top li::before { content: counter(rang); font-weight: 700; color: var(--dore); }
+.top .quoi { overflow-wrap: anywhere; }
+.top .quoi small { color: var(--doux); }
+.top .n { font-weight: 700; font-variant-numeric: tabular-nums; }
+/* Formulaire */
+form { display: grid; gap: 16px; margin-top: 14px; }
+label, fieldset > legend { display: grid; gap: 6px; font-size: 15px; font-weight: 700; color: var(--encre); }
+fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+fieldset > legend { margin-bottom: 8px; padding: 0; }
+label small, legend small { font-weight: 400; color: var(--doux); font-size: 13px; }
+input, select { width: 100%; border: 1.5px solid var(--ligne); border-radius: 12px; padding: 11px 12px; background: var(--ecru); color: var(--encre); min-height: 46px; }
 input::placeholder { color: #A2A89F; font-weight: 400; }
-input { width: 100%; border: 1.5px solid var(--ligne); border-radius: 12px; padding: 11px 12px; background: var(--ecru); color: var(--encre); min-height: 46px; }
-.prefixe { display: flex; align-items: center; border: 1.5px solid var(--ligne); border-radius: 12px; background: var(--ecru); overflow: hidden; }
-.prefixe span { padding: 0 2px 0 12px; color: var(--doux); font-weight: 400; white-space: nowrap; font-size: 14px; }
-.prefixe input { border: 0; background: transparent; padding-left: 0; min-width: 0; }
+.puces { display: flex; flex-wrap: wrap; gap: 8px; }
+.puce { position: relative; font-weight: 600; font-size: 14px; }
+.puce input { position: absolute; opacity: 0; width: 1px; height: 1px; min-height: 0; }
+.puce span { display: inline-flex; align-items: center; min-height: 40px; padding: 6px 14px; border-radius: 999px; background: var(--ecru); border: 1.5px solid var(--ligne); cursor: pointer; }
+.puce input:checked + span { background: var(--sapin); border-color: var(--sapin); color: var(--blanc); }
+.sous-form { display: grid; gap: 12px; padding: 14px; background: var(--ecru); border-radius: 14px; }
+.sous-form input { background: var(--blanc); }
+.sous-form[hidden] { display: none; }
 .retour { margin: 0; font-size: 14px; }
 .retour.erreur { color: var(--erreur); font-weight: 600; }
-.retour.ok { background: var(--ecru); border-radius: 12px; padding: 12px 14px; }
+.retour.ok { background: var(--ecru); border-radius: 14px; padding: 14px; display: grid; gap: 8px; }
+.retour.ok .court { margin: 0; font-size: 16px; }
 .note { font-size: 13px; color: var(--doux); margin: 8px 0 40px; }
 .cle-form { display: flex; gap: 8px; margin-top: 12px; }
+#nouveau[hidden], #cle-zone[hidden], #vue[hidden] { display: none; }
+/* Fenêtre QR code */
+dialog { border: 0; border-radius: 20px; padding: 22px; max-width: min(380px, calc(100vw - 32px)); width: 100%; box-shadow: 0 20px 60px rgba(22, 53, 44, .3); color: var(--encre); }
+dialog::backdrop { background: rgba(34, 49, 44, .45); }
+.qr-image { background: #fff; border: 1px solid var(--ligne); border-radius: 12px; padding: 10px; margin: 14px 0 10px; }
+.qr-image svg { display: block; width: 100%; height: auto; }
+.qr-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
 @media (max-width: 420px) {
   h1 { font-size: 30px; }
-  .chiffre b { font-size: 38px; }
+  .chiffre b { font-size: 36px; }
   .barres li { grid-template-columns: minmax(84px, 40%) 1fr auto; }
-  .prefixe span { font-size: 13px; }
 }
 </style>
 </head>
@@ -104,41 +133,76 @@ input { width: 100%; border: 1.5px solid var(--ligne); border-radius: 12px; padd
     </form>
   </section>
 
-  <p class="etat" id="etat" role="status">Chargement…</p>
-  <div id="liste"></div>
+  <div id="vue" hidden>
+    <div class="barre-actions">
+      <p class="etat" id="etat" role="status">Chargement…</p>
+      <button class="bouton" id="ouvrir-nouveau" type="button" aria-expanded="false" aria-controls="nouveau">+ Nouveau lien</button>
+    </div>
 
-  <section class="carte" id="nouveau" hidden>
-    <h2>Nouveau lien</h2>
-    <form id="form-nouveau" novalidate>
-      <label>C'est pour quoi ?
-        <input name="nom" placeholder="Bio Instagram, bingo" maxlength="120" required>
-      </label>
-      <label>Il mène où ? <small>L'adresse de la page, copiée depuis ton navigateur.</small>
-        <input name="destination" placeholder="https://www.annecharlotte.be/bingo/" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false" required>
-      </label>
-      <label>Ton lien court
-        <span class="prefixe"><span>liens.annecharlotte.be/</span><input name="slug" placeholder="bingo-insta" maxlength="41" autocapitalize="off" autocorrect="off" spellcheck="false" required></span>
-      </label>
-      <button class="bouton" type="submit">Créer le lien</button>
-      <p class="retour" id="nouveau-retour" role="status"></p>
-    </form>
-  </section>
+    <section class="carte" id="nouveau" hidden>
+      <h2>Nouveau lien</h2>
+      <form id="form-nouveau" novalidate>
+        <label>1. Il mène où ?
+          <select name="page" id="choix-page"></select>
+        </label>
+        <div class="sous-form" id="nouvelle-page" hidden>
+          <label>Nom de la page <small>Par ex. « Guide ventre gonflé ». Elle restera dans la liste.</small>
+            <input name="np_nom" maxlength="80" placeholder="Guide ventre gonflé">
+          </label>
+          <label>Son adresse <small>Copiée depuis ton navigateur.</small>
+            <input name="np_adresse" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="https://www.annecharlotte.be/…">
+          </label>
+        </div>
+        <fieldset>
+          <legend>2. Sur quelle plateforme ?</legend>
+          <div class="puces" id="puces-plateformes"></div>
+        </fieldset>
+        <label>3. Pour quel contenu ? <small>Le titre de ta vidéo ou de ton post. Pour ta bio, écris « Bio ».</small>
+          <input name="contenu" maxlength="160" placeholder="La psychologie des repas ennuyeux">
+        </label>
+        <button class="bouton" type="submit">Créer le lien</button>
+        <div class="retour" id="nouveau-retour" role="status"></div>
+      </form>
+    </section>
 
-  <p class="note">Rien de personnel n'est gardé : ni adresse IP, ni cookie. Le pays vient de l'heure réglée sur le téléphone. « Direct ou appli » : le lien a été tapé, copié, ou ouvert depuis une appli qui ne dit pas d'où elle vient (c'est souvent le cas de l'appli YouTube). Les chiffres se mettent à jour tout seuls toutes les 30 secondes.</p>
+    <section class="carte" id="ensemble"></section>
+    <div id="pages"></div>
+  </div>
+
+  <p class="note">Un lien par contenu : chaque vidéo, post ou bio a le sien, et l'outil y ajoute les UTM tout seul. Rien de personnel n'est gardé : ni adresse IP, ni cookie. Le pays vient de l'heure réglée sur le téléphone. « Direct ou appli » : le lien a été tapé, copié, ou ouvert depuis une appli qui ne dit pas d'où elle vient. « Clics vers RDV » et « clics WhatsApp » : la personne a cliqué sur le bouton depuis la page d'arrivée (ça ne dit pas encore si elle a réservé). Les chiffres se mettent à jour tout seuls toutes les 30 secondes.</p>
 </main>
+
+<dialog id="qr">
+  <h2>QR code</h2>
+  <p class="sous" id="qr-lien"></p>
+  <div class="qr-image" id="qr-image"></div>
+  <p class="sous">Pour l'imprimer : le SVG reste net à toutes les tailles. Le PNG va partout (Canva, Word…).</p>
+  <div class="qr-actions">
+    <button class="bouton" type="button" id="qr-png">Télécharger en PNG</button>
+    <button class="bouton leger" type="button" id="qr-svg">En SVG</button>
+    <button class="bouton leger" type="button" id="qr-fermer">Fermer</button>
+  </div>
+</dialog>
 
 <script>
 (function () {
   var F = 'https://bgenoxwpwhqvsqdupnub.supabase.co/functions/v1/tableau';
   var DOMAINE = 'liens.annecharlotte.be/';
-  // Les pages du site qui comptent le téléchargement de leur PDF.
-  var PAGES_PDF = ['/bingo/'];
+  var QR_LIB = 'https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js';
+  // Même liste que dans la fonction tableau.
+  var PLATEFORMES = [
+    ['youtube', 'YouTube'], ['instagram', 'Instagram'], ['tiktok', 'TikTok'], ['linkedin', 'LinkedIn'],
+    ['facebook', 'Facebook'], ['newsletter', 'Newsletter'], ['whatsapp', 'WhatsApp'],
+    ['circle', 'Circle Nutriciens'], ['papier', 'Papier (QR code)'], ['autre', 'Autre'],
+  ];
+  var NOM_PLATEFORME = {};
+  PLATEFORMES.forEach(function (p) { NOM_PLATEFORME[p[0]] = p[1]; });
   var JOURS_MAX = 60, JOURS_MIN = 14; // au moins deux semaines : des barres fines dès le 1er jour
 
   var $ = function (id) { return document.getElementById(id); };
-  var etat = $('etat'), liste = $('liste');
-  var ouverts = {};          // détails ouverts, gardés d'un rafraîchissement à l'autre
-  var premierChargement = true;
+  var etat = $('etat'), pagesZone = $('pages'), ensemble = $('ensemble');
+  var ouverts = {};           // détails ouverts, gardés d'un rafraîchissement à l'autre
+  var donnees = { liens: [], destinations: [] };
 
   // La clé : dans le lien du favori (#cle=…), sinon celle déjà retenue ici.
   var cle = new URLSearchParams(location.hash.slice(1)).get('cle') || '';
@@ -154,7 +218,7 @@ input { width: 100%; border: 1.5px solid var(--ligne); border-radius: 12px; padd
   }
 
   function esc(s) {
-    return String(s).replace(/[&<>"']/g, function (c) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
@@ -163,21 +227,22 @@ input { width: 100%; border: 1.5px solid var(--ligne); border-radius: 12px; padd
   var jourCourt = new Intl.DateTimeFormat('fr-BE', { day: 'numeric', month: 'short', timeZone: 'UTC' });
   var jourLong = new Intl.DateTimeFormat('fr-BE', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' });
   var heure = new Intl.DateTimeFormat('fr-BE', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Brussels' });
+  var pluriel = function (n, un, plusieurs) { return nombre.format(n) + ' ' + (n > 1 ? plusieurs : un); };
+  var aujourdhui = function () { return jourBxl.format(new Date()); };
 
   function ilYa(iso) {
     if (!iso) return '';
     var d = new Date(iso), min = Math.round((Date.now() - d) / 60000);
     if (min < 1) return 'à l’instant';
     if (min < 60) return 'il y a ' + min + ' min';
-    if (min < 24 * 60 && jourBxl.format(d) === jourBxl.format(new Date())) return 'aujourd’hui à ' + heure.format(d);
+    if (min < 24 * 60 && jourBxl.format(d) === aujourdhui()) return 'aujourd’hui à ' + heure.format(d);
     return 'le ' + jourCourt.format(new Date(jourBxl.format(d) + 'T00:00:00Z')) + ' à ' + heure.format(d);
   }
 
-  // Tous les jours entre la création du lien (au plus 60 jours) et aujourd'hui.
+  // ---------- Graphiques ----------
   function serieJours(lien) {
-    var aujourdhui = jourBxl.format(new Date());
-    var debut = jourBxl.format(new Date(lien.cree_le));
-    var t = Date.parse(aujourdhui + 'T00:00:00Z'), t0 = Date.parse(debut + 'T00:00:00Z');
+    var t = Date.parse(aujourdhui() + 'T00:00:00Z');
+    var t0 = Date.parse(jourBxl.format(new Date(lien.cree_le)) + 'T00:00:00Z');
     t0 = Math.min(Math.max(t0, t - (JOURS_MAX - 1) * 864e5), t - (JOURS_MIN - 1) * 864e5);
     var jours = [];
     for (var x = t0; x <= t; x += 864e5) {
@@ -192,119 +257,188 @@ input { width: 100%; border: 1.5px solid var(--ligne); border-radius: 12px; padd
     var max = Math.max.apply(null, jours.map(function (j) { return j.n; })) || 1;
     var cols = jours.map(function (j) {
       var h = j.n ? Math.max(2, Math.round((j.n / max) * 100)) : 0;
-      var texte = jourLong.format(new Date(j.jour + 'T00:00:00Z')) + ' · ' + nombre.format(j.n) + (j.n > 1 ? ' clics' : ' clic');
+      var texte = jourLong.format(new Date(j.jour + 'T00:00:00Z')) + ' · ' + pluriel(j.n, 'clic', 'clics');
       return '<button type="button" class="col' + (j.n ? '' : ' zero') + '" data-bulle="' + esc(texte) + '" aria-label="' + esc(texte) + '"><i style="height:' + h + '%"></i></button>';
-    }).join('');
-    var premier = jours[0].jour, dernier = jours[jours.length - 1].jour;
-    var lignes = jours.slice().reverse().filter(function (j) { return j.n; }).map(function (j) {
-      return '<tr><td>' + esc(jourLong.format(new Date(j.jour + 'T00:00:00Z'))) + '</td><td>' + nombre.format(j.n) + '</td></tr>';
     }).join('');
     return '<div class="jours">' +
       '<div class="jours-graph"><div class="jours-max"><span>' + nombre.format(max) + '</span></div>' + cols + '</div>' +
-      '<div class="jours-axe"><span>' + esc(jourCourt.format(new Date(premier + 'T00:00:00Z'))) + '</span>' +
-      (jours.length > 1 ? '<span>aujourd’hui</span>' : '') + '</div>' +
-      '<p class="bulle" hidden></p></div>' +
-      '<details class="tableau-jours"><summary>Les chiffres jour par jour</summary><table>' + lignes + '</table></details>';
+      '<div class="jours-axe"><span>' + esc(jourCourt.format(new Date(jours[0].jour + 'T00:00:00Z'))) + '</span><span>aujourd’hui</span></div>' +
+      '<p class="bulle" hidden></p></div>';
   }
 
-  function barres(objet, total) {
+  function barres(objet, total, nommer) {
     var lignes = Object.keys(objet || {}).map(function (k) { return [k, objet[k]]; })
+      .filter(function (l) { return l[1] > 0; })
       .sort(function (a, b) { return b[1] - a[1]; });
     if (!lignes.length) return '<p class="vide">Rien pour l’instant.</p>';
     var max = lignes[0][1];
     return '<ul class="barres">' + lignes.map(function (l) {
-      var pct = Math.round((l[1] / total) * 100);
-      return '<li title="' + esc(l[0]) + ' : ' + l[1] + '"><span class="nom">' + esc(l[0]) + '</span>' +
+      var nom = nommer ? nommer(l[0]) : l[0];
+      var pct = total ? Math.round((l[1] / total) * 100) : 0;
+      return '<li title="' + esc(nom) + ' : ' + l[1] + '"><span class="nom">' + esc(nom) + '</span>' +
         '<span class="piste"><i style="width:' + ((l[1] / max) * 100).toFixed(1) + '%"></i></span>' +
         '<span class="n">' + nombre.format(l[1]) + ' <small>' + pct + ' %</small></span></li>';
     }).join('') + '</ul>';
   }
 
-  function aPdf(destination) {
-    try {
-      var u = new URL(destination);
-      return /(^|\.)annecharlotte\.be$/.test(u.hostname) && PAGES_PDF.indexOf(u.pathname) !== -1;
-    } catch (e) { return false; }
+  // ---------- Petits morceaux ----------
+  function nomPlateforme(code) { return NOM_PLATEFORME[code] || 'Non précisé'; }
+  function actes(o) {
+    var t = [];
+    if (o.telechargements) t.push(pluriel(o.telechargements, 'PDF téléchargé', 'PDF téléchargés'));
+    if (o.rdv) t.push(pluriel(o.rdv, 'clic vers RDV', 'clics vers RDV'));
+    if (o.whatsapp) t.push(pluriel(o.whatsapp, 'clic WhatsApp', 'clics WhatsApp'));
+    return t;
+  }
+  function boutonsLien(slug) {
+    var url = 'https://' + DOMAINE + slug;
+    return '<button type="button" class="petit" data-copier="' + esc(url) + '">Copier</button>' +
+      '<button type="button" class="petit blanc" data-qr="' + esc(url) + '">QR code</button>';
+  }
+  function sansHttps(a) {
+    try { var u = new URL(a); return (u.host + u.pathname).replace(/\/$/, '') + (u.hash || ''); } catch (e) { return a; }
   }
 
-  function carte(lien, seul) {
-    var aujourdhui = (lien.par_jour || {})[jourBxl.format(new Date())] || 0;
-    var court = DOMAINE + lien.slug;
-    var html = '<article class="carte" data-slug="' + esc(lien.slug) + '">' +
-      '<h2>' + esc(lien.nom) + '</h2>' +
-      '<p class="court">' + esc(court) + ' <button type="button" class="copier" data-copier="https://' + esc(court) + '">Copier</button></p>' +
-      '<p class="vers">→ ' + esc(lien.destination.replace(/^https:\/\//, '')) + '</p>' +
+  // ---------- Vue d'ensemble ----------
+  function vueEnsemble(liens) {
+    var tot = { clics: 0, telechargements: 0, rdv: 0, whatsapp: 0, auj: 0 }, parPlateforme = {};
+    liens.forEach(function (l) {
+      tot.clics += l.clics; tot.telechargements += l.telechargements; tot.rdv += l.rdv; tot.whatsapp += l.whatsapp;
+      tot.auj += (l.par_jour || {})[aujourdhui()] || 0;
+      var p = l.plateforme || '';
+      parPlateforme[p] = (parPlateforme[p] || 0) + l.clics;
+    });
+    var meilleurs = liens.filter(function (l) { return l.clics > 0; })
+      .sort(function (a, b) { return b.clics - a.clics; }).slice(0, 5);
+    var nomPage = {};
+    donnees.destinations.forEach(function (d) { nomPage[d.id] = d.nom; });
+    return '<h2>En tout</h2>' +
       '<div class="chiffres">' +
-        '<div class="chiffre"><b>' + nombre.format(lien.clics) + '</b><span>' + (lien.clics > 1 ? 'clics' : 'clic') + ' en tout</span></div>' +
-        '<div class="chiffre"><b>' + nombre.format(aujourdhui) + '</b><span>aujourd’hui</span></div>' +
-        (aPdf(lien.destination) || lien.telechargements ? '<div class="chiffre"><b>' + nombre.format(lien.telechargements) + '</b><span>PDF téléchargé' + (lien.telechargements > 1 ? 's' : '') + '</span></div>' : '') +
-      '</div>';
-    if (!lien.clics) {
-      return html + '<p class="vide">Pas encore de clic. Dès que quelqu’un clique, ça s’affiche ici.</p></article>';
-    }
-    var ouvert = ouverts[lien.slug] !== undefined ? ouverts[lien.slug] : seul;
-    return html + '<p class="dernier">Dernier clic ' + esc(ilYa(lien.dernier_clic)) + '</p>' +
-      '<details' + (ouvert ? ' open' : '') + '><summary>Le détail</summary>' +
-      '<h3>Clics par jour</h3>' + grapheJours(lien) +
-      '<h3>D’où</h3>' + barres(lien.sources, lien.clics) +
-      '<h3>Téléphone ou ordi</h3>' + barres(lien.appareils, lien.clics) +
-      '<h3>Pays</h3>' + barres(lien.pays, lien.clics) +
-      '</details></article>';
+        '<div class="chiffre"><b>' + nombre.format(tot.clics) + '</b><span>' + (tot.clics > 1 ? 'clics' : 'clic') + '</span></div>' +
+        '<div class="chiffre"><b>' + nombre.format(tot.auj) + '</b><span>aujourd’hui</span></div>' +
+      '</div>' +
+      '<div class="chiffres petits">' +
+        '<div class="chiffre"><b>' + nombre.format(tot.telechargements) + '</b><span>PDF téléchargés</span></div>' +
+        '<div class="chiffre"><b>' + nombre.format(tot.rdv) + '</b><span>clics vers RDV</span></div>' +
+        '<div class="chiffre"><b>' + nombre.format(tot.whatsapp) + '</b><span>clics WhatsApp</span></div>' +
+      '</div>' +
+      (tot.clics ? '<h3>Par plateforme</h3>' + barres(parPlateforme, tot.clics, nomPlateforme) : '') +
+      (meilleurs.length ? '<h3>Les contenus qui amènent le plus</h3><ol class="top">' + meilleurs.map(function (l) {
+        var quoi = l.contenu || (l.plateforme ? 'Lien général' : l.nom);
+        var ou = [nomPlateforme(l.plateforme), nomPage[l.destination_id]].filter(function (x) { return x && x !== 'Non précisé'; }).join(' → ');
+        return '<li><span class="quoi">' + esc(quoi) + (ou ? ' <small>' + esc(ou) + '</small>' : '') + '</span><span class="n">' + nombre.format(l.clics) + '</span></li>';
+      }).join('') + '</ol>' : '');
+  }
+
+  // ---------- Une page d'arrivée et ses liens ----------
+  function ligneLien(l) {
+    var auj = (l.par_jour || {})[aujourdhui()] || 0;
+    var titre = l.plateforme
+      ? '<span class="pastille">' + esc(nomPlateforme(l.plateforme)) + '</span><span class="contenu">' + esc(l.contenu || 'Lien général') + '</span>'
+      : '<span class="contenu">' + esc(l.nom) + '</span>';
+    var mini = [pluriel(l.clics, 'clic', 'clics'), nombre.format(auj) + ' aujourd’hui'].concat(actes(l));
+    var html = '<li class="lien" data-slug="' + esc(l.slug) + '">' +
+      '<div class="lien-tete">' + titre + '</div>' +
+      '<p class="court">' + esc(DOMAINE + l.slug) + ' ' + boutonsLien(l.slug) + '</p>' +
+      '<p class="mini">' + mini.map(function (t) { return t.replace(/^([\d\s ]+)/, '<b>$1</b>'); }).join(' · ') + '</p>';
+    if (!l.clics) return html + '</li>';
+    var campagnes = Object.keys(l.campagnes || {}).length
+      ? '<h3>Campagnes (UTM reçues)</h3>' + barres(l.campagnes, l.clics) : '';
+    return html + '<details class="detail"' + (ouverts[l.slug] ? ' open' : '') + '><summary>Le détail · dernier clic ' + esc(ilYa(l.dernier_clic)) + '</summary>' +
+      '<h3>Clics par jour</h3>' + grapheJours(l) +
+      '<h3>D’où</h3>' + barres(l.sources, l.clics) +
+      '<h3>Téléphone ou ordi</h3>' + barres(l.appareils, l.clics) +
+      '<h3>Pays</h3>' + barres(l.pays, l.clics) + campagnes +
+      '</details></li>';
+  }
+
+  function cartePage(titre, adresse, liens) {
+    var tot = { clics: 0, telechargements: 0, rdv: 0, whatsapp: 0 };
+    liens.forEach(function (l) { tot.clics += l.clics; tot.telechargements += l.telechargements; tot.rdv += l.rdv; tot.whatsapp += l.whatsapp; });
+    liens.sort(function (a, b) { return b.clics - a.clics || (a.cree_le < b.cree_le ? 1 : -1); });
+    var resume = [pluriel(tot.clics, 'clic', 'clics')].concat(actes(tot)).join(' · ');
+    return '<section class="carte"><h2>' + esc(titre) + '</h2>' +
+      (adresse ? '<p class="sous">→ ' + esc(sansHttps(adresse)) + '</p>' : '') +
+      '<p class="mini">' + esc(resume) + ' · ' + pluriel(liens.length, 'lien', 'liens') + '</p>' +
+      '<ul class="liens">' + liens.map(ligneLien).join('') + '</ul></section>';
+  }
+
+  function afficher() {
+    var liens = donnees.liens;
+    ensemble.innerHTML = vueEnsemble(liens);
+    var parPage = {}, autres = [];
+    liens.forEach(function (l) {
+      if (l.destination_id) (parPage[l.destination_id] = parPage[l.destination_id] || []).push(l);
+      else autres.push(l);
+    });
+    var cartes = donnees.destinations
+      .filter(function (d) { return parPage[d.id]; })
+      .map(function (d) {
+        var ls = parPage[d.id];
+        return { clics: ls.reduce(function (s, l) { return s + l.clics; }, 0), html: cartePage(d.nom, d.adresse, ls) };
+      })
+      .sort(function (a, b) { return b.clics - a.clics; })
+      .map(function (c) { return c.html; });
+    if (autres.length) cartes.push(cartePage('Autres liens', '', autres));
+    pagesZone.innerHTML = cartes.join('') ||
+      '<p class="vide">Aucun lien pour l’instant : « + Nouveau lien » en haut.</p>';
+    remplirChoixPages();
   }
 
   function charger() {
-    if (!cle) { $('cle-zone').hidden = false; etat.textContent = ''; return; }
+    if (!cle) { $('cle-zone').hidden = false; return; }
     return api('stats').then(function (d) {
       if (d._statut === 401) {
-        $('cle-zone').hidden = false; $('nouveau').hidden = true; liste.innerHTML = '';
-        etat.className = 'etat erreur'; etat.textContent = 'Cette clé ne marche pas.';
+        $('cle-zone').hidden = false; $('vue').hidden = true;
         return;
       }
       if (!d.liens) throw new Error(d.erreur || 'réponse vide');
-      $('cle-zone').hidden = true; $('nouveau').hidden = false;
-      liste.querySelectorAll('details:not(.tableau-jours)').forEach(function (el) {
+      $('cle-zone').hidden = true; $('vue').hidden = false;
+      pagesZone.querySelectorAll('details.detail').forEach(function (el) {
         ouverts[el.closest('[data-slug]').dataset.slug] = el.open;
       });
-      liste.innerHTML = d.liens.length
-        ? d.liens.map(function (l) { return carte(l, d.liens.length === 1 || premierChargement && l === d.liens[0]); }).join('')
-        : '<p class="vide">Aucun lien pour l’instant : crée le premier juste en dessous.</p>';
-      premierChargement = false;
+      donnees = d;
+      afficher();
       etat.className = 'etat';
       etat.textContent = 'À jour à ' + heure.format(new Date());
     }).catch(function () {
+      $('vue').hidden = false;
       etat.className = 'etat erreur';
       etat.textContent = 'Impossible de charger les chiffres. Vérifie ta connexion, puis « Actualiser ».';
     });
   }
 
-  // Bulle des barres par jour (survol à la souris, toucher au téléphone).
+  // ---------- Bulle des barres par jour ----------
   function montrerBulle(col) {
     var bloc = col.closest('.jours'), bulle = bloc.querySelector('.bulle');
     bloc.querySelectorAll('.col.actif').forEach(function (c) { c.classList.remove('actif'); });
     col.classList.add('actif');
     bulle.textContent = col.dataset.bulle;
     bulle.hidden = false;
-    var x = col.offsetLeft + col.offsetWidth / 2;
-    var demi = bulle.offsetWidth / 2;
+    var x = col.offsetLeft + col.offsetWidth / 2, demi = bulle.offsetWidth / 2;
     bulle.style.left = Math.min(Math.max(x, demi), bloc.offsetWidth - demi) + 'px';
   }
   function cacherBulle(bloc) {
     bloc.querySelector('.bulle').hidden = true;
     bloc.querySelectorAll('.col.actif').forEach(function (c) { c.classList.remove('actif'); });
   }
-  liste.addEventListener('mouseover', function (e) { var c = e.target.closest('.col'); if (c) montrerBulle(c); });
-  liste.addEventListener('mouseout', function (e) {
-    var c = e.target.closest('.col');
+  document.addEventListener('mouseover', function (e) { var c = e.target.closest && e.target.closest('.col'); if (c) montrerBulle(c); });
+  document.addEventListener('mouseout', function (e) {
+    var c = e.target.closest && e.target.closest('.col');
     if (c && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest('.jours-graph'))) cacherBulle(c.closest('.jours'));
   });
-  liste.addEventListener('focusin', function (e) { var c = e.target.closest('.col'); if (c) montrerBulle(c); });
-  liste.addEventListener('click', function (e) {
+  document.addEventListener('focusin', function (e) { var c = e.target.closest && e.target.closest('.col'); if (c) montrerBulle(c); });
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest) return;
     var c = e.target.closest('.col');
     if (c) { montrerBulle(c); return; }
     var b = e.target.closest('[data-copier]');
-    if (b) copier(b.dataset.copier, b);
+    if (b) { copier(b.dataset.copier, b); return; }
+    var q = e.target.closest('[data-qr]');
+    if (q) ouvrirQr(q.dataset.qr);
   });
 
+  // ---------- Copier ----------
   function copier(texte, bouton) {
     var fini = function () { var t = bouton.textContent; bouton.textContent = 'Copié !'; setTimeout(function () { bouton.textContent = t; }, 1600); };
     // Sans HTTPS (ou dans certains navigateurs), navigator.clipboard n'existe
@@ -326,45 +460,129 @@ input { width: 100%; border: 1.5px solid var(--ligne); border-radius: 12px; padd
     else secours();
   }
 
+  // ---------- QR code ----------
+  var qrActuel = null, libQr = null;
+  function chargerLibQr() {
+    if (libQr) return libQr;
+    libQr = new Promise(function (ok, ko) {
+      var s = document.createElement('script');
+      s.src = QR_LIB; s.onload = function () { ok(window.qrcode); }; s.onerror = ko;
+      document.head.appendChild(s);
+    });
+    return libQr;
+  }
+  function matriceQr(texte) {
+    var qr = window.qrcode(0, 'M');
+    qr.addData(texte); qr.make();
+    return qr;
+  }
+  function svgQr(qr, marge) {
+    var n = qr.getModuleCount(), taille = n + marge * 2, d = '';
+    for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) if (qr.isDark(r, c)) d += 'M' + (c + marge) + ' ' + (r + marge) + 'h1v1h-1z';
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + taille + ' ' + taille + '" shape-rendering="crispEdges">' +
+      '<rect width="' + taille + '" height="' + taille + '" fill="#fff"/><path d="' + d + '" fill="#000"/></svg>';
+  }
+  function telecharger(nom, url) {
+    var a = document.createElement('a');
+    a.href = url; a.download = nom;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  }
+  function nomFichier(url) { return 'qr-' + url.replace(/^https:\/\/liens\.annecharlotte\.be\//, '').replace(/\//g, '-'); }
+  function ouvrirQr(url) {
+    $('qr-lien').textContent = url.replace(/^https:\/\//, '');
+    $('qr-image').innerHTML = '<p class="vide">Fabrication…</p>';
+    $('qr').showModal();
+    chargerLibQr().then(function () {
+      qrActuel = { url: url, qr: matriceQr(url) };
+      $('qr-image').innerHTML = svgQr(qrActuel.qr, 4);
+    }).catch(function () {
+      $('qr-image').innerHTML = '<p class="vide">Le QR code n’a pas pu se charger. Vérifie ta connexion.</p>';
+    });
+  }
+  $('qr-svg').addEventListener('click', function () {
+    if (!qrActuel) return;
+    var blob = new Blob([svgQr(qrActuel.qr, 4)], { type: 'image/svg+xml' });
+    var u = URL.createObjectURL(blob);
+    telecharger(nomFichier(qrActuel.url) + '.svg', u);
+    setTimeout(function () { URL.revokeObjectURL(u); }, 2000);
+  });
+  $('qr-png').addEventListener('click', function () {
+    if (!qrActuel) return;
+    var qr = qrActuel.qr, marge = 4, n = qr.getModuleCount(), case_ = Math.max(8, Math.floor(1200 / (n + marge * 2)));
+    var cv = document.createElement('canvas');
+    cv.width = cv.height = (n + marge * 2) * case_;
+    var ctx = cv.getContext('2d');
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, cv.width, cv.height);
+    ctx.fillStyle = '#000';
+    for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) if (qr.isDark(r, c)) ctx.fillRect((c + marge) * case_, (r + marge) * case_, case_, case_);
+    telecharger(nomFichier(qrActuel.url) + '.png', cv.toDataURL('image/png'));
+  });
+  $('qr-fermer').addEventListener('click', function () { $('qr').close(); });
+  $('qr').addEventListener('click', function (e) { if (e.target === $('qr')) $('qr').close(); });
+
+  // ---------- Nouveau lien ----------
+  var form = $('form-nouveau'), retour = $('nouveau-retour'), choixPage = $('choix-page');
+  $('puces-plateformes').innerHTML = PLATEFORMES.map(function (p) {
+    return '<label class="puce"><input type="radio" name="plateforme" value="' + p[0] + '"><span>' + esc(p[1]) + '</span></label>';
+  }).join('');
+
+  function remplirChoixPages() {
+    var actuel = choixPage.value;
+    choixPage.innerHTML = '<option value="">Choisis une page…</option>' +
+      donnees.destinations.map(function (d) { return '<option value="' + esc(d.id) + '">' + esc(d.nom) + '</option>'; }).join('') +
+      '<option value="__nouvelle">+ Une nouvelle page (nouveau lead magnet…)</option>';
+    if (actuel) choixPage.value = actuel;
+  }
+  choixPage.addEventListener('change', function () { $('nouvelle-page').hidden = choixPage.value !== '__nouvelle'; });
+
+  $('ouvrir-nouveau').addEventListener('click', function () {
+    var s = $('nouveau'), ouvrir = s.hidden;
+    s.hidden = !ouvrir;
+    this.setAttribute('aria-expanded', String(ouvrir));
+    this.textContent = ouvrir ? 'Fermer' : '+ Nouveau lien';
+    if (ouvrir) { choixPage.focus(); }
+  });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    retour.className = 'retour'; retour.textContent = '';
+    var plateforme = (form.querySelector('input[name=plateforme]:checked') || {}).value;
+    var corps = { plateforme: plateforme, contenu: form.contenu.value.trim() };
+    if (choixPage.value === '__nouvelle') {
+      corps.nouvelle_page = { nom: form.np_nom.value.trim(), adresse: form.np_adresse.value.trim() };
+      if (!corps.nouvelle_page.nom || !corps.nouvelle_page.adresse) return erreur('Donne le nom et l’adresse de la nouvelle page.');
+    } else if (choixPage.value) {
+      corps.destination_id = choixPage.value;
+    } else {
+      return erreur('Choisis où mène le lien.');
+    }
+    if (!plateforme) return erreur('Choisis la plateforme.');
+    var bouton = form.querySelector('button[type=submit]');
+    bouton.disabled = true; retour.textContent = 'Création…';
+    api('creer', corps).then(function (d) {
+      bouton.disabled = false;
+      if (!d.ok) return erreur(d.erreur || 'Ça n’a pas marché.');
+      retour.className = 'retour ok';
+      retour.innerHTML = '<span>C’est prêt, il marche déjà :</span>' +
+        '<p class="court">' + esc(DOMAINE + d.slug) + ' ' + boutonsLien(d.slug) + '</p>';
+      form.contenu.value = ''; form.np_nom.value = ''; form.np_adresse.value = '';
+      if (d.page) { choixPage.value = d.page.id; $('nouvelle-page').hidden = true; }
+      charger().then(function () { if (d.page) choixPage.value = d.page.id; });
+    }).catch(function () { bouton.disabled = false; erreur('Pas de connexion, réessaie.'); });
+    function erreur(t) { retour.className = 'retour erreur'; retour.textContent = t; }
+  });
+
+  // ---------- Clé, rafraîchissement ----------
   $('actualiser').addEventListener('click', function () { etat.className = 'etat'; etat.textContent = 'Chargement…'; charger(); });
   $('cle-form').addEventListener('submit', function (e) {
     e.preventDefault();
     cle = e.target.cle.value.trim();
     try { localStorage.setItem('liens-cle', cle); } catch (err) {}
-    etat.className = 'etat'; etat.textContent = 'Chargement…';
     charger();
   });
 
-  // Nouveau lien : la fin du lien se propose d'après le nom, tant qu'on n'y touche pas.
-  var form = $('form-nouveau'), retour = $('nouveau-retour'), slugTouche = false;
-  function versSlug(s) {
-    return s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40).replace(/-+$/, '');
-  }
-  form.nom.addEventListener('input', function () { if (!slugTouche) form.slug.value = versSlug(form.nom.value); });
-  form.slug.addEventListener('input', function () { slugTouche = true; });
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var slug = versSlug(form.slug.value), nom = form.nom.value.trim(), destination = form.destination.value.trim();
-    form.slug.value = slug;
-    retour.className = 'retour';
-    if (!nom || !destination || !slug) { retour.className = 'retour erreur'; retour.textContent = 'Remplis les trois cases.'; return; }
-    var bouton = form.querySelector('button[type=submit]');
-    bouton.disabled = true; retour.textContent = 'Création…';
-    api('creer', { nom: nom, destination: destination, slug: slug }).then(function (d) {
-      bouton.disabled = false;
-      if (!d.ok) { retour.className = 'retour erreur'; retour.textContent = d.erreur || 'Ça n’a pas marché.'; return; }
-      var court = DOMAINE + d.slug;
-      retour.className = 'retour ok';
-      retour.innerHTML = 'C’est prêt, il marche déjà : <b>' + esc(court) + '</b> <button type="button" class="copier" data-copier="https://' + esc(court) + '">Copier</button>';
-      retour.querySelector('.copier').addEventListener('click', function (ev) { copier(ev.target.dataset.copier, ev.target); });
-      form.nom.value = ''; form.destination.value = ''; form.slug.value = ''; slugTouche = false;
-      charger();
-    }).catch(function () { bouton.disabled = false; retour.className = 'retour erreur'; retour.textContent = 'Pas de connexion, réessaie.'; });
-  });
-
   charger();
-  setInterval(function () { if (document.visibilityState === 'visible' && cle) charger(); }, 30000);
+  setInterval(function () { if (document.visibilityState === 'visible' && cle && !$('qr').open) charger(); }, 30000);
 })();
 </script>
 </body>

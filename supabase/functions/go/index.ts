@@ -16,6 +16,9 @@ const CORS = {
   "Access-Control-Allow-Headers": "content-type",
 };
 
+// Au-delà du clic, comptés par le script liens-suivi.js du site.
+const EVENEMENTS = new Set(["clic", "telechargement", "rdv", "whatsapp"]);
+
 // Robots et aperçus de liens (WhatsApp, Slack…) : jamais comptés.
 const ROBOTS = /bot|crawl|spider|slurp|preview|facebookexternalhit|whatsapp\/|telegram|discord|curl|wget|python|headless|lighthouse/i;
 
@@ -102,7 +105,7 @@ Deno.serve(async (req) => {
   }
 
   const slug = String(params.l ?? "").toLowerCase().replace(/^\/+|\/+$/g, "");
-  if (!/^[a-z0-9][a-z0-9-]{0,40}$/.test(slug)) return reponse({ erreur: "lien inconnu" }, 404);
+  if (!/^[a-z0-9][a-z0-9-]{0,40}(\/[a-z0-9]{3,12})?$/.test(slug)) return reponse({ erreur: "lien inconnu" }, 404);
 
   const { data: lien, error } = await supabase
     .from("liens").select("destination, actif").eq("slug", slug).maybeSingle();
@@ -113,10 +116,11 @@ Deno.serve(async (req) => {
   if (!ROBOTS.test(ua)) {
     await supabase.from("clics").insert({
       slug,
-      evenement: params.e === "telechargement" ? "telechargement" : "clic",
+      evenement: EVENEMENTS.has(String(params.e)) ? String(params.e) : "clic",
       source: source(ua, String(params.r ?? "").slice(0, 500)),
       appareil: appareil(ua),
       pays: pays(String(params.tz ?? "").slice(0, 60)),
+      campagne: params.uc ? String(params.uc).slice(0, 120) : null,
     });
   }
 

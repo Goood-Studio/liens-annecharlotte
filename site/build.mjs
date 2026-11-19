@@ -48,10 +48,23 @@ rmSync(SORTIE, { recursive: true, force: true });
 mkdirSync(SORTIE);
 cpSync('site/static', SORTIE, { recursive: true });
 
-const gabarit = readFileSync('site/redirection.html', 'utf-8');
+// Le code commun (compter, transmettre les UTM, ajouter ?via=) va dans les
+// pages de liens et dans la 404.
+const allerJs = readFileSync('site/aller.js', 'utf-8');
+writeFileSync(`${SORTIE}/404.html`, readFileSync('site/404.html', 'utf-8').replace('{{ALLER_JS}}', allerJs));
+
+const gabarit = readFileSync('site/redirection.html', 'utf-8').replace('{{ALLER_JS}}', allerJs);
+// Un seul aperçu par page d'arrivée, même si elle a vingt liens.
+const apercus = new Map();
+const apercuDe = (adresse) => {
+  const u = new URL(adresse);
+  const cle = u.origin + u.pathname;
+  if (!apercus.has(cle)) apercus.set(cle, apercu(cle));
+  return apercus.get(cle);
+};
 let n = 0;
 for (const lien of liens.filter((l) => l.actif)) {
-  const a = await apercu(lien.destination);
+  const a = await apercuDe(lien.destination);
   const balises = [
     a.titre && `<meta property="og:title" content="${a.titre}">`,
     a.desc && `<meta property="og:description" content="${a.desc}">`,

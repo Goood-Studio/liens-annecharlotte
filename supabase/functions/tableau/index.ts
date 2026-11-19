@@ -1,7 +1,8 @@
 // Le tableau de bord de liens.annecharlotte.be/stats/ : lire les chiffres,
 // créer un lien (un ID unique par contenu, UTM ajoutées toutes seules),
-// ajouter une page d'arrivée. Protégé par la clé CLE_TABLEAU (secret
-// Supabase), que seule Anne-Charlotte a dans son favori.
+// ajouter une page d'arrivée. Entrée : un compte connecté dont l'e-mail est
+// dans AUTORISES (Anne-Charlotte, Valentin), ou la clé CLE_TABLEAU, réservée
+// à la publication de la nuit (secret GitHub).
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
 const supabase = createClient(
@@ -10,11 +11,13 @@ const supabase = createClient(
   { auth: { persistSession: false } },
 );
 const CLE = Deno.env.get("CLE_TABLEAU") ?? "";
+const AUTORISES = (Deno.env.get("AUTORISES") ?? "").split(",")
+  .map((e) => e.trim().toLowerCase()).filter(Boolean);
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "content-type",
+  "Access-Control-Allow-Headers": "authorization, content-type, apikey, x-client-info",
 };
 
 // Même liste que dans /stats/. utm_source = la clé, utm_medium = medium.
@@ -48,6 +51,15 @@ function memeCle(a: string, b: string) {
   let diff = 0;
   for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
   return diff === 0;
+}
+
+async function autorise(req: Request, corps: Record<string, unknown>) {
+  if (memeCle(String(corps.cle ?? ""), CLE)) return true;
+  const jeton = (req.headers.get("authorization") ?? "").replace(/^Bearer\s+/i, "");
+  if (!jeton) return false;
+  const { data, error } = await supabase.auth.getUser(jeton);
+  const email = data?.user?.email?.toLowerCase();
+  return !error && !!email && AUTORISES.includes(email);
 }
 
 function versSlug(s: string, max: number) {
@@ -94,7 +106,7 @@ Deno.serve(async (req) => {
 
   let corps: Record<string, unknown> = {};
   try { corps = await req.json(); } catch { return reponse({ erreur: "JSON attendu" }, 400); }
-  if (!memeCle(String(corps.cle ?? ""), CLE)) return reponse({ erreur: "clé incorrecte" }, 401);
+  if (!(await autorise(req, corps))) return reponse({ erreur: "non connecté" }, 401);
 
   const action = String(corps.action ?? "stats");
 

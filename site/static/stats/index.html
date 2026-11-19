@@ -100,8 +100,11 @@ input::placeholder { color: #A2A89F; font-weight: 400; }
 .retour.ok { background: var(--ecru); border-radius: 14px; padding: 14px; display: grid; gap: 8px; }
 .retour.ok .court { margin: 0; font-size: 16px; }
 .note { font-size: 13px; color: var(--doux); margin: 8px 0 40px; }
-.cle-form { display: flex; gap: 8px; margin-top: 12px; }
-#nouveau[hidden], #cle-zone[hidden], #vue[hidden] { display: none; }
+.acces { max-width: 420px; margin: 8px auto 24px; }
+.acces form { gap: 14px; }
+.acces .lien-texte { appearance: none; border: 0; background: none; padding: 0; color: var(--sapin); font-weight: 600; text-decoration: underline; cursor: pointer; justify-self: start; min-height: 32px; }
+.entete-droite { display: flex; gap: 8px; align-items: center; }
+#nouveau[hidden], #connexion[hidden], #choix-mdp[hidden], #invitation[hidden], #vue[hidden], #actualiser[hidden], #deconnexion[hidden] { display: none; }
 /* Fenêtre QR code */
 dialog { border: 0; border-radius: 20px; padding: 22px; max-width: min(380px, calc(100vw - 32px)); width: 100%; box-shadow: 0 20px 60px rgba(22, 53, 44, .3); color: var(--encre); }
 dialog::backdrop { background: rgba(34, 49, 44, .45); }
@@ -121,15 +124,48 @@ dialog::backdrop { background: rgba(34, 49, 44, .45); }
     <p class="sur">liens.annecharlotte.be</p>
     <h1>Mes liens</h1>
   </div>
-  <button class="bouton leger" id="actualiser" type="button">Actualiser</button>
+  <div class="entete-droite">
+    <button class="bouton leger" id="actualiser" type="button" hidden>Actualiser</button>
+    <button class="petit blanc" id="deconnexion" type="button" hidden>Se déconnecter</button>
+  </div>
 </header>
 <main>
-  <section class="carte" id="cle-zone" hidden>
-    <h2>Ta clé</h2>
-    <p class="vide">Ouvre le lien complet de ton favori (celui qui finit par #cle=…), ou colle ta clé ici.</p>
-    <form class="cle-form" id="cle-form">
-      <input name="cle" autocomplete="off" aria-label="Clé du tableau" required>
-      <button class="bouton" type="submit">Ouvrir</button>
+  <section class="carte acces" id="connexion" hidden>
+    <h2>Se connecter</h2>
+    <form id="form-connexion" novalidate>
+      <label>Ton e-mail
+        <input name="email" type="email" autocomplete="username" required>
+      </label>
+      <label>Ton mot de passe
+        <input name="mdp" type="password" autocomplete="current-password" required>
+      </label>
+      <button class="bouton" type="submit">Se connecter</button>
+      <button class="lien-texte" type="button" id="oubli">Mot de passe oublié ?</button>
+      <p class="retour" id="connexion-retour" role="status"></p>
+    </form>
+  </section>
+
+  <section class="carte acces" id="invitation" hidden>
+    <h2>Bienvenue</h2>
+    <p class="sous">Tu as reçu un accès aux liens d'Anne-Charlotte. Choisis ton mot de passe pour entrer.</p>
+    <form id="form-invitation" novalidate>
+      <button class="bouton" type="submit">Choisir mon mot de passe</button>
+      <p class="retour" id="invitation-retour" role="status"></p>
+    </form>
+  </section>
+
+  <section class="carte acces" id="choix-mdp" hidden>
+    <h2>Choisis ton mot de passe</h2>
+    <p class="sous">Au moins 10 caractères, avec des lettres et des chiffres.</p>
+    <form id="form-mdp" novalidate>
+      <label>Nouveau mot de passe
+        <input name="mdp" type="password" autocomplete="new-password" minlength="10" required>
+      </label>
+      <label>Encore une fois
+        <input name="mdp2" type="password" autocomplete="new-password" minlength="10" required>
+      </label>
+      <button class="bouton" type="submit">Enregistrer mon mot de passe</button>
+      <p class="retour" id="mdp-retour" role="status"></p>
     </form>
   </section>
 
@@ -169,7 +205,7 @@ dialog::backdrop { background: rgba(34, 49, 44, .45); }
     <div id="pages"></div>
   </div>
 
-  <p class="note">Un lien par contenu : chaque vidéo, post ou bio a le sien, et l'outil y ajoute les UTM tout seul. Rien de personnel n'est gardé : ni adresse IP, ni cookie. Le pays vient de l'heure réglée sur le téléphone. « Direct ou appli » : le lien a été tapé, copié, ou ouvert depuis une appli qui ne dit pas d'où elle vient. « Clics vers RDV » et « clics WhatsApp » : la personne a cliqué sur le bouton depuis la page d'arrivée (ça ne dit pas encore si elle a réservé). Les chiffres se mettent à jour tout seuls toutes les 30 secondes.</p>
+  <p class="note">Accès réservé à Anne-Charlotte et Valentin. Un lien par contenu : chaque vidéo, post ou bio a le sien, et l'outil y ajoute les UTM tout seul. Rien de personnel n'est gardé : ni adresse IP, ni cookie. Le pays vient de l'heure réglée sur le téléphone. « Direct ou appli » : le lien a été tapé, copié, ou ouvert depuis une appli qui ne dit pas d'où elle vient. « Clics vers RDV » et « clics WhatsApp » : la personne a cliqué sur le bouton depuis la page d'arrivée (ça ne dit pas encore si elle a réservé). Les chiffres se mettent à jour tout seuls toutes les 30 secondes.</p>
 </main>
 
 <dialog id="qr">
@@ -184,9 +220,12 @@ dialog::backdrop { background: rgba(34, 49, 44, .45); }
   </div>
 </dialog>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 (function () {
-  var F = 'https://bgenoxwpwhqvsqdupnub.supabase.co/functions/v1/tableau';
+  var PROJET = 'https://bgenoxwpwhqvsqdupnub.supabase.co';
+  var CLE_PUBLIQUE = 'sb_publishable_05nqpOyqNBVP8TE3Cypgtg_kAn4wIjd'; // publique par nature
+  var F = PROJET + '/functions/v1/tableau';
   var DOMAINE = 'liens.annecharlotte.be/';
   var QR_LIB = 'https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js';
   // Même liste que dans la fonction tableau.
@@ -204,17 +243,39 @@ dialog::backdrop { background: rgba(34, 49, 44, .45); }
   var ouverts = {};           // détails ouverts, gardés d'un rafraîchissement à l'autre
   var donnees = { liens: [], destinations: [] };
 
-  // La clé : dans le lien du favori (#cle=…), sinon celle déjà retenue ici.
-  var cle = new URLSearchParams(location.hash.slice(1)).get('cle') || '';
-  try {
-    if (cle) localStorage.setItem('liens-cle', cle);
-    else cle = localStorage.getItem('liens-cle') || '';
-  } catch (e) {}
+  // Connexion : un compte par personne (Anne-Charlotte, Valentin). La
+  // session reste ouverte sur l'appareil jusqu'à « Se déconnecter ».
+  var hashDepart = location.hash;
+  var sb = window.supabase.createClient(PROJET, CLE_PUBLIQUE, {
+    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: 'implicit' },
+  });
+  try { localStorage.removeItem('liens-cle'); } catch (e) {} // l'ancienne clé ne sert plus
+  var connecte = false;
 
   function api(action, extra) {
-    var corps = Object.assign({ cle: cle, action: action }, extra || {});
-    return fetch(F, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(corps) })
-      .then(function (r) { return r.json().then(function (d) { d._statut = r.status; return d; }); });
+    return sb.auth.getSession().then(function (r) {
+      var jeton = r.data.session && r.data.session.access_token;
+      return fetch(F, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', authorization: 'Bearer ' + (jeton || '') },
+        body: JSON.stringify(Object.assign({ action: action }, extra || {})),
+      });
+    }).then(function (r) { return r.json().then(function (d) { d._statut = r.status; return d; }); });
+  }
+
+  function montrer(ecran, message) {
+    connecte = ecran === 'vue';
+    $('connexion').hidden = ecran !== 'connexion';
+    $('choix-mdp').hidden = ecran !== 'choix';
+    $('invitation').hidden = ecran !== 'invitation';
+    $('vue').hidden = ecran !== 'vue';
+    $('actualiser').hidden = ecran !== 'vue';
+    $('deconnexion').hidden = ecran === 'connexion' || ecran === 'invitation';
+    if (ecran === 'connexion') {
+      var r = $('connexion-retour');
+      r.className = message ? 'retour erreur' : 'retour';
+      r.textContent = message || '';
+    }
   }
 
   function esc(s) {
@@ -386,14 +447,13 @@ dialog::backdrop { background: rgba(34, 49, 44, .45); }
   }
 
   function charger() {
-    if (!cle) { $('cle-zone').hidden = false; return; }
     return api('stats').then(function (d) {
       if (d._statut === 401) {
-        $('cle-zone').hidden = false; $('vue').hidden = true;
+        montrer('connexion', 'Ce compte n’a pas accès aux liens, ou ta session a expiré. Reconnecte-toi.');
         return;
       }
       if (!d.liens) throw new Error(d.erreur || 'réponse vide');
-      $('cle-zone').hidden = true; $('vue').hidden = false;
+      if (!connecte) montrer('vue');
       pagesZone.querySelectorAll('details.detail').forEach(function (el) {
         ouverts[el.closest('[data-slug]').dataset.slug] = el.open;
       });
@@ -402,7 +462,6 @@ dialog::backdrop { background: rgba(34, 49, 44, .45); }
       etat.className = 'etat';
       etat.textContent = 'À jour à ' + heure.format(new Date());
     }).catch(function () {
-      $('vue').hidden = false;
       etat.className = 'etat erreur';
       etat.textContent = 'Impossible de charger les chiffres. Vérifie ta connexion, puis « Actualiser ».';
     });
@@ -572,17 +631,81 @@ dialog::backdrop { background: rgba(34, 49, 44, .45); }
     function erreur(t) { retour.className = 'retour erreur'; retour.textContent = t; }
   });
 
-  // ---------- Clé, rafraîchissement ----------
-  $('actualiser').addEventListener('click', function () { etat.className = 'etat'; etat.textContent = 'Chargement…'; charger(); });
-  $('cle-form').addEventListener('submit', function (e) {
+  // ---------- Connexion ----------
+  $('form-connexion').addEventListener('submit', function (e) {
     e.preventDefault();
-    cle = e.target.cle.value.trim();
-    try { localStorage.setItem('liens-cle', cle); } catch (err) {}
-    charger();
+    var f = e.target, r = $('connexion-retour'), b = f.querySelector('button[type=submit]');
+    r.className = 'retour'; r.textContent = 'Connexion…'; b.disabled = true;
+    sb.auth.signInWithPassword({ email: f.email.value.trim(), password: f.mdp.value }).then(function (res) {
+      b.disabled = false;
+      if (res.error) { r.className = 'retour erreur'; r.textContent = 'E-mail ou mot de passe incorrect.'; return; }
+      f.mdp.value = ''; r.textContent = '';
+      montrer('vue'); etat.textContent = 'Chargement…'; charger();
+    });
+  });
+  $('oubli').addEventListener('click', function () {
+    var email = $('form-connexion').email.value.trim(), r = $('connexion-retour');
+    if (!email) { r.className = 'retour erreur'; r.textContent = 'Écris d’abord ton e-mail juste au-dessus.'; return; }
+    r.className = 'retour'; r.textContent = 'Envoi…';
+    sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + '/stats/' }).then(function (res) {
+      if (res.error) { r.className = 'retour erreur'; r.textContent = 'L’e-mail n’a pas pu partir. Demande à Claude un nouveau lien pour choisir ton mot de passe.'; return; }
+      r.className = 'retour ok'; r.textContent = 'Si ce compte existe, un e-mail arrive avec un lien pour choisir un nouveau mot de passe (regarde aussi les indésirables).';
+    });
+  });
+  $('form-mdp').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var f = e.target, r = $('mdp-retour'), b = f.querySelector('button[type=submit]'), mdp = f.mdp.value;
+    r.className = 'retour erreur';
+    if (mdp.length < 10 || !/[a-zA-Z]/.test(mdp) || !/[0-9]/.test(mdp)) { r.textContent = 'Au moins 10 caractères, avec des lettres et des chiffres.'; return; }
+    if (mdp !== f.mdp2.value) { r.textContent = 'Les deux mots de passe ne sont pas pareils.'; return; }
+    r.className = 'retour'; r.textContent = 'Enregistrement…'; b.disabled = true;
+    sb.auth.updateUser({ password: mdp }).then(function (res) {
+      b.disabled = false;
+      if (res.error) { r.className = 'retour erreur'; r.textContent = 'Ça n’a pas marché : ' + res.error.message; return; }
+      f.mdp.value = ''; f.mdp2.value = ''; r.textContent = '';
+      montrer('vue'); etat.textContent = 'Mot de passe enregistré. Chargement…'; charger();
+    });
+  });
+  $('deconnexion').addEventListener('click', function () {
+    sb.auth.signOut().then(function () { montrer('connexion'); });
+  });
+  $('actualiser').addEventListener('click', function () { etat.className = 'etat'; etat.textContent = 'Chargement…'; charger(); });
+
+  // Arrivée par un lien d'invitation ou de mot de passe oublié : on fait
+  // choisir le mot de passe. Lien expiré : on le dit.
+  sb.auth.onAuthStateChange(function (evenement) {
+    if (evenement === 'PASSWORD_RECOVERY') montrer('choix');
+  });
+  // Lien envoyé par Claude : #invitation=<jeton>&t=invite|recovery. Le jeton
+  // n'est utilisé qu'au clic sur le bouton : les aperçus de WhatsApp ou des
+  // messageries (qui « ouvrent » les liens d'avance) ne peuvent pas le griller.
+  var pInv = new URLSearchParams(hashDepart.slice(1));
+  var jetonInvitation = pInv.get('invitation'), typeInvitation = pInv.get('t') === 'recovery' ? 'recovery' : 'invite';
+  $('form-invitation').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var r = $('invitation-retour'), b = e.target.querySelector('button');
+    r.className = 'retour'; r.textContent = 'Un instant…'; b.disabled = true;
+    sb.auth.verifyOtp({ token_hash: jetonInvitation, type: typeInvitation }).then(function (res) {
+      b.disabled = false;
+      if (res.error) { montrer('connexion', 'Ce lien a expiré ou a déjà servi. Demande-en un nouveau à Claude, ou clique sur « Mot de passe oublié ? ».'); return; }
+      montrer('choix');
+    });
   });
 
-  charger();
-  setInterval(function () { if (document.visibilityState === 'visible' && cle && !$('qr').open) charger(); }, 30000);
+  sb.auth.getSession().then(function (r) {
+    var p = new URLSearchParams(hashDepart.slice(1));
+    if (hashDepart) history.replaceState(null, '', location.pathname);
+    if (jetonInvitation) { montrer('invitation'); return; }
+    if (p.get('error_code') === 'otp_expired' || p.get('error')) {
+      montrer('connexion', 'Ce lien a expiré (il vaut 24 h). Demande-en un nouveau à Claude, ou clique sur « Mot de passe oublié ? ».');
+      return;
+    }
+    if (r.data.session && /^(invite|recovery|signup)$/.test(p.get('type') || '')) { montrer('choix'); return; }
+    if (r.data.session) { montrer('vue'); charger(); }
+    else montrer('connexion');
+  });
+
+  setInterval(function () { if (document.visibilityState === 'visible' && connecte && !$('qr').open) charger(); }, 30000);
 })();
 </script>
 </body>
